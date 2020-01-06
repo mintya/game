@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #content {
+            border: 1px solid lightgrey;
+            display: grid;
+        }
+        div[name='light'] {
+            border: 1px solid black;
+        }
+        .on {
+            background-color: yellow;
+        }
+        .off {
+            background-color: gray;
+        }
+    </style>
+</head>
+<body>
+    <div id="content"></div>
+    <script>
+        const num = 10;
+        const width = 500;
+        const nodeWidth = 1 / num * 100;
+        let content = document.querySelector('#content');
+        content.style.width = `${width}px`;
+        content.style.height = `${width}px`;
+        log(`repeat(${num}, ${nodeWidth}%)`);
+        content.style.gridTemplateColumns = `repeat(${num}, ${nodeWidth}%)`;
+        content.style.gridTemplateRows = `repeat(${num}, ${nodeWidth}%)`;
+        function log(s) {
+            console.log(s);
+        }
+        function flip(node) {
+            node.className = node.className === 'on' ? 'off' : 'on';
+        }
+        window.onload = function() {
+            let divMatrix = new Array(num);
+            for (let i = 0; i < num; i++) {
+                divMatrix[i] = new Array(num);
+                for (let j = 0; j < num; j++) {
+                    let div = document.createElement('div');
+                    div.setAttribute('name', 'light');
+                    div.className = 'on';
+                    div.onclick = event => {
+                        flip(div);
+                        if (j - 1 >= 0) {
+                                flip(divMatrix[i][j - 1]);
+                            }
+                            if (j + 1 < num) {
+                                flip(divMatrix[i][j + 1]);
+                            }
+                        if (i - 1 >= 0) {
+                            flip(divMatrix[i - 1][j]);
+                            if (j - 1 >= 0) {
+                                flip(divMatrix[i - 1][j - 1]);
+                            }
+                            if (j + 1 < num) {
+                                flip(divMatrix[i - 1][j + 1]);
+                            }
+                        }
+                        if (i + 1 < num) {
+                            flip(divMatrix[i + 1][j]);
+                            if (j - 1 >= 0) {
+                                flip(divMatrix[i + 1][j - 1]);
+                            }
+                            if (j + 1 < num) {
+                                flip(divMatrix[i + 1][j + 1]);
+                            }
+                        }
+                    }
+                    content.appendChild(div);
+                    divMatrix[i][j] = div;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
